@@ -1,0 +1,85 @@
+#include<stdio.h>
+#include<GL/glut.h>
+
+GLfloat vx1=100.0,vy1=100.0;
+GLfloat vx2=300.0,vy2=100.0;
+GLfloat vx3=200.0,vy3=300.0;
+int n;
+void drawtria(GLfloat x1,GLfloat y1,GLfloat x2,GLfloat y2,GLfloat x3,GLfloat y3)
+{
+	glColor3f(0.0,1.0,0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(x1,y1);
+	glVertex2f(x2,y2);
+	glVertex2f(x3,y3);
+	glEnd();
+}
+
+void divide_tria(GLfloat x1,GLfloat y1,GLfloat x2,GLfloat y2,GLfloat x3,GLfloat y3,int m)
+{
+	GLfloat tx1,ty1,tx2,ty2,tx3,ty3;
+	int j;
+ 	if(m>0)
+ 	{
+ 		tx1=(x1+x2)/2;
+   		ty1=(y1+y2)/2;
+   		tx2=(x1+x3)/2;
+   		ty2=(y1+y3)/2;
+   		tx3=(x2+x3)/2;
+   		ty3=(y2+y3)/2;
+   		divide_tria(x1,y1,tx1,ty1,tx2,ty2,m-1);
+   		divide_tria(x2,y2,tx1,ty1,tx3,ty3,m-1);
+   		divide_tria(x3,y3,tx2,ty2,tx3,ty3,m-1);  
+ 	}
+ 	else drawtria(x1,y1,x2,y2,x3,y3);
+}
+
+void triagasket(int m)
+{
+	glColor3f(0.0,0.0,1.0);
+	divide_tria(vx1,vy1,vx2,vy2,vx3,vy3,m);
+}
+
+void display()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	triagasket(n);
+	glFlush();
+}
+
+
+void myinit()
+{
+	glClearColor(1.0,1.0,1.0,1.0);
+	glColor3f(1.0,0.0,0.0);
+	glPointSize(1.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0.0,499.0,0.0,499.0);
+}
+
+int main(int argc,char **argv)
+{
+	printf("no of division?\t");
+	scanf("%d",&n);
+	glutInit(&argc,argv);
+	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+	glutInitWindowSize(500,500);
+	glutInitWindowPosition(0,0);
+	glutCreateWindow("2d gasket");
+	glutDisplayFunc(display);
+	myinit();
+	glutMainLoop();
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
